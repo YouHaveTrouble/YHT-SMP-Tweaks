@@ -1,0 +1,8 @@
+name: YHTSMPTweaks
+version: '${project.version}'
+main: me.youhavetrouble.yhtsmp.YhtSmpTweaks
+api-version: '1.20'
+load: STARTUP
+authors: [YouHaveTrouble]
+description: "Tweaks for YHT SMP"
+prefix: "YHT SMP Tweaks"
