@@ -1,8 +1,8 @@
 name: YHTSMPTweaks
 version: '${project.version}'
 main: me.youhavetrouble.yhtsmp.YhtSmpTweaks
-api-version: '1.20'
-load: STARTUP
+bootstrapper: me.youhavetrouble.yhtsmp.YhtBootstrapper
+api-version: '1.21'
 authors: [YouHaveTrouble]
 description: "Tweaks for YHT SMP"
 prefix: "YHT SMP Tweaks"

@@ -22,8 +22,10 @@ public class EndermenSpawnWithShulkerShellModule implements Listener {
         if (ThreadLocalRandom.current().nextDouble() < chance) return;
         enderman.setCarriedBlock(null);
         enderman.clearActiveItem();
-        enderman.setCanPickupItems(false);
+        enderman.setCanPickupItems(true);
         enderman.getEquipment().setItemInMainHand(new ItemStack(Material.SHULKER_SHELL));
+        enderman.getEquipment().setItemInMainHandDropChance(1.0f);
+        enderman.setCanPickupItems(false);
     }
 
 }
