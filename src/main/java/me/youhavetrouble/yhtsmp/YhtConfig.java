@@ -2,6 +2,7 @@ package me.youhavetrouble.yhtsmp;
 
 import net.kyori.adventure.key.Key;
 import org.bukkit.Registry;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemType;
@@ -16,7 +17,7 @@ public class YhtConfig {
 
     public static YhtConfig instance = null;
 
-    private File configFile;
+    private final File configFile;
     private final FileConfiguration configuration;
 
     public YhtConfig(File configFile) {
@@ -41,6 +42,13 @@ public class YhtConfig {
         } catch (Exception e) {
             throw new RuntimeException("Failed to save config file: " + configFile.getAbsolutePath(), e);
         }
+    }
+
+    public ConfigurationSection getConfigurationSection(@NotNull String path) {
+        if (!configuration.isConfigurationSection(path)) {
+            configuration.createSection(path);
+        }
+        return configuration.getConfigurationSection(path);
     }
 
     public double getDouble(@NotNull String path, double def) {
