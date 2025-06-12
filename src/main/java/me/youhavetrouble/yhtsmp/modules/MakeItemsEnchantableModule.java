@@ -52,7 +52,6 @@ public class MakeItemsEnchantableModule implements Listener {
 
     private void makeItemEnchantable(ItemStack item) {
         if (item == null || item.isEmpty()) return;
-        if (item.hasData(DataComponentTypes.ENCHANTABLE)) return;
         if (!itemTypes.contains(item.getType().asItemType())) return;
         item.setData(DataComponentTypes.ENCHANTABLE, Enchantable.enchantable(1));
     }
