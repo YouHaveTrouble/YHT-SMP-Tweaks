@@ -1,6 +1,6 @@
 package me.youhavetrouble.yhtsmp;
 
-import me.youhavetrouble.yhtsmp.modules.EndermenSpawnWithShulkerShellModule;
+import me.youhavetrouble.yhtsmp.modules.EndermenSpawnWithShulkerModule;
 import me.youhavetrouble.yhtsmp.modules.MakeItemsEnchantableModule;
 import org.bukkit.inventory.ItemType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,9 +12,9 @@ public final class YhtSmpTweaks extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        double endermenWithShulkerShellChance = YhtConfig.instance.getDouble("endermen-spawn-with-shulker-shell-chance", 0);
+        double endermenWithShulkerShellChance = YhtConfig.instance.getDouble("endermen-spawn-with-shulker-chance", 0);
         if (endermenWithShulkerShellChance > 0) {
-            getServer().getPluginManager().registerEvents(new EndermenSpawnWithShulkerShellModule(endermenWithShulkerShellChance), this);
+            getServer().getPluginManager().registerEvents(new EndermenSpawnWithShulkerModule(endermenWithShulkerShellChance), this);
         }
 
         List<ItemType> enchantableItemTypes = YhtConfig.instance.getItemTypeList("enchantable-items", List.of());
