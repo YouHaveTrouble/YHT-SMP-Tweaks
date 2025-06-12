@@ -1,11 +1,12 @@
 package me.youhavetrouble.yhtsmp.modules;
 
 import io.papermc.paper.datacomponent.DataComponentTypes;
-import io.papermc.paper.datacomponent.item.Enchantable;
 import io.papermc.paper.datacomponent.item.Repairable;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
+import io.papermc.paper.registry.set.RegistryKeySet;
 import io.papermc.paper.registry.set.RegistrySet;
+import me.youhavetrouble.yhtsmp.YhtConfig;
 import net.kyori.adventure.key.Key;
 import org.bukkit.Registry;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,23 +19,23 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ItemType;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings("UnstableApiUsage")
 public class MakeItemsRepairableModule implements Listener {
 
-    private final Map<ItemType, ItemType> repairItems = new HashMap<>();
+    private final Map<ItemType, RegistryKeySet<@NotNull ItemType>> repairItems = new HashMap<>();
 
     public MakeItemsRepairableModule(ConfigurationSection mapSection) {
         for (String key : mapSection.getKeys(false)) {
             ItemType itemType = Registry.ITEM.get(Key.key(key));
             if (itemType == null) continue;
-            String repairKey = mapSection.getString(key);
-            ItemType repairItemType = Registry.ITEM.get(Key.key(repairKey));
-            if (repairItemType == null) continue;
-            repairItems.put(itemType, repairItemType);
+            Set<TypedKey<ItemType>> repairingItemTypeKeys = new HashSet<>();
+            YhtConfig.instance.getItemTypeList("repairable-items." + key, List.of())
+                    .forEach(repairingItemType -> repairingItemTypeKeys.add(TypedKey.create(RegistryKey.ITEM, repairingItemType.key())));
+            repairItems.put(itemType, RegistrySet.keySet(RegistryKey.ITEM, repairingItemTypeKeys.stream().toList()));
         }
     }
 
@@ -65,11 +66,9 @@ public class MakeItemsRepairableModule implements Listener {
 
     private void makeItemRepairable(ItemStack item) {
         if (item == null || item.isEmpty()) return;
-        if (item.hasData(DataComponentTypes.REPAIRABLE)) return;
-        ItemType repairingItemType = repairItems.get(item.getType().asItemType());
+        RegistryKeySet<@NotNull ItemType> repairingItemType = repairItems.get(item.getType().asItemType());
         if (repairingItemType == null) return;
-        TypedKey<ItemType> repairingItemTypeKey = TypedKey.create(RegistryKey.ITEM, repairingItemType.key());
-        item.setData(DataComponentTypes.REPAIRABLE, Repairable.repairable(RegistrySet.keySet(RegistryKey.ITEM, repairingItemTypeKey)));
+        item.setData(DataComponentTypes.REPAIRABLE, Repairable.repairable(repairingItemType));
     }
 
 }
